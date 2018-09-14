@@ -55,7 +55,7 @@ void getValuesDHT22() {
   display.setCursor(25, 0);
   display.println(temp);
 
-  display.setCursor(90, 0);
+  display.setCursor(95, 0);
   display.println(hum);
 
 }
@@ -64,8 +64,8 @@ void getValueExternal() {
   sensor.requestTemperatures();
   temp1 = sensor.getTempCByIndex(0);
   display.setCursor(5,15);
-  display.println("Ext: ");
-  display.setCursor(30,15);
+  display.println("Ext T: ");
+  display.setCursor(50,15);
   display.println(temp1);
 }
 
