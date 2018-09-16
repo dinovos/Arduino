@@ -22,6 +22,7 @@ const int button = 4;
 int buttonState = 1;
 int brojac = 0;
 
+//pozdravna poruka
 void printWelcome(String message) {
   display.setTextSize(2);
   display.setTextColor(WHITE);
@@ -30,6 +31,7 @@ void printWelcome(String message) {
   display.display();
 }
 
+//pozdravna poruka2
 void printWelcome2(String message) {
   display.setTextSize(1);
   display.setTextColor(WHITE);
@@ -122,37 +124,36 @@ void setup() {
 
 void loop() {
 
+  //dohvati pritisak gumba
   buttonState = digitalRead(button);
   Serial.println(buttonState);
 
   if (buttonState == LOW) {
     delay(500);
     brojac++;
-    Serial.println("Brojac povecan za 1: " + brojac);
   }
 
   switch (brojac) {
     case 0:
+      //prikaz podataka sa obje sonde
       display.clearDisplay();
       getValuesDHT22();
       getValueExternal();
       display.display();
-      Serial.println("Brojac na 0");
       break;
     case 1:
+      //prikaz podataka sa DHT22
       display.clearDisplay();
       getValuesOnlyDHT22();
       display.display();
-      Serial.println("Brojac na 1");
       break;
     case 2:
+    //prikaz podataka sa DS1820
       display.clearDisplay();
       getValueExternalOnly();
       display.display();
-      Serial.println("Brojac na 2");
       break;
     case 3:
-      Serial.println("Brojac na 3, vracanje na 0");
       brojac = 0;
       break;
   }
