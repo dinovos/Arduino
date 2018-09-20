@@ -21,6 +21,10 @@ float temp1;
 const int button = 4;
 int buttonState = 1;
 int brojac = 0;
+float minTempDHT = 1000;
+float maxTempDHT = -1000;
+float minTempDS = 1000;
+float maxTempDS = -1000;
 
 //pozdravna poruka
 void printWelcome(String message) {
@@ -47,6 +51,7 @@ void printWelcome2(String message) {
   }
 }
 
+//dohvaca podatke sa DHT22 za prikaz na pocetnom zaslonu
 void getValuesDHT22() {
   display.setTextSize(1);
   display.setCursor(5, 0);
@@ -77,14 +82,15 @@ void getValuesOnlyDHT22() {
   hum = dht.readHumidity();
   temp = dht.readTemperature();
 
-  display.setCursor(30, 0);
+  display.setCursor(25, 0);
   display.println(temp);
 
-  display.setCursor(40, 15);
+  display.setCursor(50, 15);
   display.println(hum);
 
 }
 
+//dohvaca podatke sa DS1820 za prikaz na pocetnom zaslonu
 void getValueExternal() {
   display.setTextSize(1);
   sensor.requestTemperatures();
@@ -104,6 +110,52 @@ void getValueExternalOnly() {
   display.setCursor(5, 15);
   display.println(temp1);
 }
+
+//prikaz min i max temp dohvacene sa DHT22
+void getMinMaxDHT() {
+
+  minTempDHT = min(minTempDHT, dht.readTemperature());
+  maxTempDHT = max(maxTempDHT, dht.readTemperature());
+  
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.println("Min: ");
+  display.setCursor(0, 15);
+  display.println("Max: ");
+
+  display.setCursor(35,0);
+  display.println(minTempDHT);
+
+  display.setCursor(35,15);
+  display.println(maxTempDHT);
+
+  display.setCursor(100, 15);
+  display.println("DHT");
+}
+
+
+void getMinMaxDS() {
+
+  sensor.requestTemperatures();
+  minTempDS = min(minTempDS,sensor.getTempCByIndex(0));
+  maxTempDS = max(maxTempDS,sensor.getTempCByIndex(0));
+  
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.println("Min: ");
+  display.setCursor(0, 15);
+  display.println("Max: ");
+
+  display.setCursor(35,0);
+  display.println(minTempDS);
+
+  display.setCursor(35,15);
+  display.println(maxTempDS);
+
+  display.setCursor(100, 15);
+  display.println("DS");
+}
+
 
 void setup() {
 
@@ -129,7 +181,7 @@ void loop() {
   Serial.println(buttonState);
 
   if (buttonState == LOW) {
-    delay(500);
+    delay(600);
     brojac++;
   }
 
@@ -148,12 +200,24 @@ void loop() {
       display.display();
       break;
     case 2:
-    //prikaz podataka sa DS1820
+      //prikaz podataka sa DS1820
       display.clearDisplay();
       getValueExternalOnly();
       display.display();
       break;
     case 3:
+      //prikaz min i max temp sa DHT22
+      display.clearDisplay();
+      getMinMaxDHT();
+      display.display();
+      break;
+    case 4:
+      //prikaz min i max temp sa DS1820
+      display.clearDisplay();
+      getMinMaxDS();
+      display.display();
+      break;
+    case 5:
       brojac = 0;
       break;
   }
